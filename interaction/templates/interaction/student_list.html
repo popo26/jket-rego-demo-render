@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block header %}
+<h1>{{ classroom }}</h1>
+{% endblock %}
+
+{% block content %}
+
+{% get_current_language as CURRENT_LANGUAGE %}
+{% get_available_languages as AVAILABLE_LANGUAGES %}
+{% get_language_info_list for AVAILABLE_LANGUAGES as languages %}
+<div class="languages lang-section">
+  <ul class="languages">
+    {% for language in languages %}
+
+    <a class='link' href="/{{ language.code }}/interaction/classroom_list/{{classroom.id}}"
+      {% if language.code == CURRENT_LANGUAGE %} class="active" {% endif %}>
+      {{ language.name_local }}
+    </a><br>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="student-list">
+  {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+  <div class="container">
+    <div class="row">
+      {% if s_list %}
+
+      {% for student in s_list %}
+      <div class="col-lg-6 col-md-6 col-sm-6">
+
+        <form action="{% url 'checkout' student.id %}">
+          <button type="submit" class="btn btn-success btn-lg student-buttons">{{ student.first_name}}</button>
+        </form>
+      </div>
+      {% endfor %}
+
+      {% else %}
+      <p>{% trans 'There is no student in this class.' %}</p>
+
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="previous-page">
+    <a class="link" href="{% url 'classroom_list' %}">{% trans 'Previous Page' %}</a>
+  </div>
+</div>
+
+
+{% endblock %}

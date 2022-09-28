@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block header %}
+<h1>{% trans 'Select your classroom' %}</h1>
+{% endblock %}
+
+{% block content %}
+
+{% get_current_language as CURRENT_LANGUAGE %}
+{% get_available_languages as AVAILABLE_LANGUAGES %}
+{% get_language_info_list for AVAILABLE_LANGUAGES as languages %}
+<div class="languages lang-section">
+  <ul class="languages">
+    {% for language in languages %}
+      
+        <a class='link' href="/{{ language.code }}/interaction/classroom_list"
+          {% if language.code == CURRENT_LANGUAGE %} class="active"{% endif %}>
+          {{ language.name_local }}
+        </a><br>
+    {% endfor %}
+  </ul>
+</div>
+
+
+
+<div class="classroom">
+
+  
+
+    {% if class_room_list %}
+    <div class="container">
+    <div class="row">
+    {% for class in class_room_list %}
+    {% if class.today_classes %}
+    
+    
+    <div class="col-lg-6 col-md-6 col-sm-6">
+    
+          <form action="{% url 'student_list' class.id %}">
+            <button  type="submit" class="btn btn-success btn-lg classroom-buttons">{{ class }}</button>
+          </form>
+      
+        </div>
+    
+        
+{% endif %}
+{% endfor %}
+{% else %}
+<h3>{% trans 'There is no class today.' %}</h3>
+</div>
+</div>
+{% endif %}
+</div>
+
+<div class="previous-page">
+    <a class="link" href="{% url 'index' %}">{% trans 'Previous Page' %}</a>
+    </div>
+
+
+{% endblock %}
